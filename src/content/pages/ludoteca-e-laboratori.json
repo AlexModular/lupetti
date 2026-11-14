@@ -1,0 +1,35 @@
+{
+  "title": "Ludoteca & Laboratori",
+  "subtitle": "",
+  "metaTitle": "Ludoteca, Laboratori & Prenotazioni a Numero Chiuso | I Lupetti",
+  "metaDescription": "Prenota online il tuo posto per i laboratori creativi e i turni a numero chiuso nella ludoteca I Lupetti.",
+  "introImage": null,
+  "fullWidth": false,
+  "theme": "light",
+  "pageBuilder": [
+    {
+      "discriminant": "bookingsCalendar",
+      "value": {
+        "tagline": "Prenotazione Online a Numero Chiuso",
+        "heading": "Laboratori & Turni in Ludoteca",
+        "description": "Per garantire attenzione, sicurezza e tranquillità a ogni bambino, i nostri laboratori e i turni in ludoteca sono a numero chiuso. Scegli l'appuntamento e prenota il tuo posto.",
+        "onlyFeatured": false
+      }
+    },
+    {
+      "discriminant": "separator",
+      "value": {
+        "line": true
+      }
+    },
+    {
+      "discriminant": "servicesList",
+      "value": {
+        "tagline": "I Nostri Spazi",
+        "heading": "Le Aree de I Lupetti",
+        "showLinkToPage": false
+      }
+    }
+  ]
+}
+

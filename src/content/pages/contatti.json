@@ -1,0 +1,19 @@
+{
+  "title": "Orari & Contatti",
+  "subtitle": "",
+  "metaTitle": "Orari & Contatti | I Lupetti • Via Savigno 1/a, Bologna",
+  "metaDescription": "Orari di apertura (Lun-Sab 09:00-13:00 e 15:30-19:00), indirizzo in Via Savigno 1/a a Bologna, parcheggio gratuito nei dintorni e contatti di I Lupetti.",
+  "introImage": null,
+  "fullWidth": false,
+  "theme": "light",
+  "pageBuilder": [
+    {
+      "discriminant": "map",
+      "value": {
+        "tagline": "Via Savigno, 1/a • 40141 Bologna (BO)",
+        "heading": "Orari di Apertura & Dove Siamo",
+        "subtitle": "Siamo aperti dal lunedì al sabato mattina e pomeriggio. Nei dintorni è disponibile il parcheggio gratuito in strada."
+      }
+    }
+  ]
+}

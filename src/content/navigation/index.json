@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "label": "Home",
+      "href": "/"
+    },
+    {
+      "label": "Chi Siamo & Spazi",
+      "href": "/chi-siamo"
+    },
+    {
+      "label": "Ludoteca & Prenotazioni",
+      "href": "/ludoteca-e-laboratori"
+    },
+    {
+      "label": "Orari & Contatti",
+      "href": "/contatti"
+    }
+  ],
+  "ctaLabel": "Prenota Posto",
+  "ctaHref": "/ludoteca-e-laboratori#prenotazioni"
+}
+

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" fill="none">
+  <rect width="800" height="560" rx="32" fill="#F2FBF9"/>
+  <circle cx="680" cy="110" r="65" fill="#EAF6FD"/>
+  <circle cx="120" cy="130" r="50" fill="#FDF0F5"/>
+  <!-- Rainbow arch backdrop -->
+  <path d="M210 410 A190 190 0 0 1 590 410" stroke="#4EA898" stroke-width="28" fill="none" stroke-linecap="round" opacity="0.85"/>
+  <path d="M245 410 A155 155 0 0 1 555 410" stroke="#56ACE0" stroke-width="28" fill="none" stroke-linecap="round" opacity="0.85"/>
+  <path d="M280 410 A120 120 0 0 1 520 410" stroke="#F2A4C0" stroke-width="28" fill="none" stroke-linecap="round" opacity="0.85"/>
+  <path d="M315 410 A85 85 0 0 1 485 410" stroke="#F3C1B5" stroke-width="28" fill="none" stroke-linecap="round" opacity="0.85"/>
+  <!-- Soft cushions & storybook -->
+  <ellipse cx="260" cy="430" rx="95" ry="32" fill="#FFFFFF" stroke="#4EA898" stroke-width="5"/>
+  <ellipse cx="540" cy="430" rx="95" ry="32" fill="#FFFFFF" stroke="#56ACE0" stroke-width="5"/>
+  <path d="M330 390 Q365 370 400 395 Q435 370 470 390 L470 445 Q435 425 400 450 Q365 425 330 445 Z" fill="#FFFFFF" stroke="#388577" stroke-width="5" stroke-linejoin="round"/>
+  <line x1="400" y1="395" x2="400" y2="450" stroke="#388577" stroke-width="4"/>
+  <text x="400" y="518" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="800" font-size="22" fill="#388577">ANGOLO MORBIDO BABY &amp; LETTURE ANIMATE</text>
+</svg>
+

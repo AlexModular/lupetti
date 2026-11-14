@@ -1,0 +1,69 @@
+{
+  "title": "Home",
+  "subtitle": "",
+  "metaTitle": "I Lupetti • Giocattoleria & Ludoteca a Bologna (Via Savigno 1/a)",
+  "metaDescription": "I Lupetti è un negozio di giocattoli e ludoteca in Via Savigno 1/a a Bologna. Vendita giochi, baby parking e laboratori organizzati per diverse fasce d'età.",
+  "introImage": null,
+  "fullWidth": false,
+  "theme": "light",
+  "pageBuilder": [
+    {
+      "discriminant": "banner",
+      "value": {
+        "badge": "Giocattoleria ★ Ludoteca • Bologna",
+        "heading": "Il tuo spazio per il gioco, la crescita e la fantasia a Bologna.",
+        "subheading": "In Via Savigno 1/a trovi la nostra giocattoleria e ludoteca dedicata alle famiglie: vendita di giochi selezionati, servizio di baby parking e laboratori organizzati per diverse fasce d'età.",
+        "image": "/images/logo.webp",
+        "showLogoCard": true,
+        "ctaLabel": "Prenota Laboratorio o Turno",
+        "ctaHref": "/ludoteca-e-laboratori",
+        "secondaryCtaLabel": "Dove Siamo & Orari",
+        "secondaryCtaHref": "/contatti"
+      }
+    },
+    {
+      "discriminant": "quickActions",
+      "value": {
+        "actions": [
+          {
+            "label": "Prenota Turno / Laboratorio",
+            "icon": "CalendarCheck",
+            "href": "/ludoteca-e-laboratori#prenotazioni"
+          },
+          {
+            "label": "Ludoteca & Baby Parking",
+            "icon": "Puzzle",
+            "href": "/ludoteca-e-laboratori"
+          },
+          {
+            "label": "Negozio di Giocattoli",
+            "icon": "Gift",
+            "href": "/chi-siamo"
+          },
+          {
+            "label": "Via Savigno 1/a, Bologna",
+            "icon": "MapPin",
+            "href": "/contatti"
+          }
+        ]
+      }
+    },
+    {
+      "discriminant": "servicesList",
+      "value": {
+        "tagline": "I Nostri Servizi per le Famiglie",
+        "heading": "Giocattoleria, Baby Parking & Laboratori",
+        "showLinkToPage": true
+      }
+    },
+    {
+      "discriminant": "bookingsCalendar",
+      "value": {
+        "tagline": "Prenotazioni Online a Numero Chiuso",
+        "heading": "Prossimi Laboratori e Turni in Programma",
+        "description": "Prenota direttamente online il posto per il tuo bambino: ogni laboratorio e turno in ludoteca è a numero chiuso.",
+        "onlyFeatured": true
+      }
+    }
+  ]
+}

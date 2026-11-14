@@ -1,0 +1,13 @@
+{
+  "title": "Pomeriggio Giochi da Tavolo Cooperativi",
+  "date": "Venerdì 27 Novembre • Ore 16:30 – 18:30",
+  "category": "Evento Speciale",
+  "ageRange": "5 – 11 anni",
+  "bookable": true,
+  "maxCapacity": 12,
+  "price": "8€ a bambino",
+  "summary": "Apriamo le scatole più belle della nostra giocattoleria! Il nostro staff guiderà i bambini alla scoperta di nuovi giochi cooperativi, di abilità e strategia.",
+  "image": "/images/gallery/giochi-famiglia.svg",
+  "featured": true,
+  "order": 3
+}

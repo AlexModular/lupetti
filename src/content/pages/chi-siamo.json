@@ -1,0 +1,32 @@
+{
+  "title": "Chi Siamo & Spazi",
+  "subtitle": "",
+  "metaTitle": "Chi Siamo & Spazi | I Lupetti • Giocattoleria & Ludoteca Bologna",
+  "metaDescription": "Scopri I Lupetti in Via Savigno 1/a a Bologna: negozio di giocattoli e ludoteca attrezzata per i più piccoli con baby parking, fasciatoio e laboratori.",
+  "introImage": null,
+  "fullWidth": false,
+  "theme": "light",
+  "pageBuilder": [
+    {
+      "discriminant": "textWithIllustration",
+      "value": {
+        "tagline": "Via Savigno 1/a • Bologna",
+        "heading": "Uno spazio dedicato alle famiglie e ai più piccoli",
+        "text": "I Lupetti è un negozio di giocattoli e ludoteca situato in Via Savigno, 1/a a Bologna (40141). La struttura nasce come uno spazio accogliente dedicato alle famiglie, offrendo sia la vendita di giochi selezionati sia servizi di ludoteca con baby parking e laboratori organizzati per diverse fasce d'età.",
+        "secondaryText": "La struttura è interamente attrezzata per accogliere anche i bambini più piccoli ed è dotata di fasciatoio e attività a loro dedicate. Nei dintorni è inoltre disponibile il comodo parcheggio gratuito in strada.",
+        "image": "/images/lupetti-mascot.png",
+        "imagePosition": "right",
+        "backgroundStyle": "teal",
+        "ctaLabel": "Scopri i Laboratori e Prenota",
+        "ctaHref": "/ludoteca-e-laboratori"
+      }
+    },
+    {
+      "discriminant": "gallery",
+      "value": {
+        "tagline": "Galleria",
+        "heading": "I Nostri Spazi e la Giocattoleria"
+      }
+    }
+  ]
+}

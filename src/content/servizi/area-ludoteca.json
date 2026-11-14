@@ -1,0 +1,14 @@
+{
+  "title": "Ludoteca & Baby Parking",
+  "badge": "Spazio Famiglie",
+  "themeColor": "teal",
+  "description": "Uno spazio sicuro e accogliente dedicato al gioco e alla socializzazione, con servizio di baby parking e ambienti attrezzati anche per i più piccoli.",
+  "priceInfo": "Accesso a turni e servizio Baby Parking",
+  "features": [
+    "Servizio di ludoteca e baby parking con personale dedicato",
+    "Struttura attrezzata per i più piccoli e dotata di fasciatoio",
+    "Attività e aree gioco pensate per diverse fasce d'età",
+    "Accesso su prenotazione a numero chiuso per la massima sicurezza"
+  ],
+  "order": 1
+}

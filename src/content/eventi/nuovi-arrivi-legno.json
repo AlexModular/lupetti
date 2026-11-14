@@ -1,0 +1,13 @@
+{
+  "title": "Ingresso Ludoteca Pomeridiano (Turno Assistito)",
+  "date": "Giovedì 26 Novembre • Ore 16:30 – 18:30",
+  "category": "Turno Ludoteca",
+  "ageRange": "1 – 8 anni",
+  "bookable": true,
+  "maxCapacity": 15,
+  "price": "10€ (2 ore)",
+  "summary": "Accesso a numero chiuso alla sala ludoteca con area morbida baby, casette in legno, costruzioni e supervisione dei nostri educatori.",
+  "image": "/images/gallery/sala-ludoteca.svg",
+  "featured": false,
+  "order": 4
+}

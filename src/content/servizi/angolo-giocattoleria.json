@@ -1,0 +1,14 @@
+{
+  "title": "Giocattoleria & Vendita Giochi",
+  "badge": "Tutte le Età",
+  "themeColor": "sky",
+  "description": "Un negozio di giocattoli selezionati con cura per accompagnare la crescita: giochi per la prima infanzia, creativi, in legno e da tavolo.",
+  "priceInfo": "Pagamenti con carte di credito e debito accettati",
+  "features": [
+    "Giochi per la prima infanzia, costruzioni e giochi in legno",
+    "Giochi da tavolo, puzzle e kit creativi per diverse fasce d'età",
+    "Consulenza personalizzata in negozio per scegliere il regalo giusto",
+    "Si accettano carte di credito, carte di debito e bancomat"
+  ],
+  "order": 2
+}
