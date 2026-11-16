@@ -1,138 +1,90 @@
-import React from "react";
-import Link from "next/link";
+import { stegaClean } from "@sanity/client/stega";
 import { ArrowRight } from "lucide-react";
 
-export interface TextWithIllustrationBlockProps {
-  tagline?: string;
-  heading?: string;
-  text?: string;
-  secondaryText?: string;
-  image?: string | null;
-  imagePosition?: "left" | "right" | "top" | "bottom";
-  backgroundStyle?: "white" | "teal" | "sky";
-  ctaLabel?: string;
-  ctaHref?: string;
-}
+import RichText from "@/components/RichText";
+import SanityImage from "@/components/SanityImage";
+import SmartLink from "@/components/SmartLink";
+import type { TextWithIllustrationBlock } from "@/types";
+
+const SFONDI: Record<string, string> = {
+  white: "bg-white",
+  teal: "bg-gradient-to-b from-lupetti-tealLight/40 to-white",
+  sky: "bg-gradient-to-b from-lupetti-skyLight/40 to-white",
+};
 
 export default function TextWithIllustration({
   item,
 }: {
-  item: TextWithIllustrationBlockProps;
+  item: TextWithIllustrationBlock;
 }) {
-  const pos = item.imagePosition || "right";
-  const bgClass =
-    item.backgroundStyle === "teal"
-      ? "bg-gradient-to-b from-lupetti-tealLight/40 to-white"
-      : item.backgroundStyle === "sky"
-      ? "bg-gradient-to-b from-lupetti-skyLight/40 to-white"
-      : "bg-white";
+  const posizione = stegaClean(item.imagePosition) || "right";
+  const sfondo = SFONDI[stegaClean(item.backgroundStyle) || "white"] ?? SFONDI.white;
+  const verticale = posizione === "top" || posizione === "bottom";
+  const haImmagine = Boolean(item.image?.asset?._ref);
 
-  const isVertical = pos === "top" || pos === "bottom";
-
-  const renderImage = () =>
-    item.image ? (
-      <div className="flex justify-center">
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-lupetti-teal/20 shadow-card flex flex-col items-center text-center max-w-sm w-full">
-          <img
-            src={item.image}
-            alt={item.heading || "Illustrazione"}
-            className="w-52 h-auto object-contain"
-          />
-          <p className="mt-4 font-display font-bold text-sm text-lupetti-tealDark">
-            Giocattoleria ★ Ludoteca
-          </p>
-        </div>
+  const immagine = haImmagine ? (
+    <div className="flex justify-center">
+      <div className="max-w-md w-full" data-reveal>
+        <SanityImage
+          image={item.image}
+          alt={item.heading || ""}
+          width={800}
+          sizes="(min-width: 1024px) 400px, 90vw"
+          className="w-full h-auto object-contain"
+        />
       </div>
-    ) : null;
+    </div>
+  ) : null;
+
+  const testo = (
+    <div>
+      {item.tagline && (
+        <span className="occhiello">
+          {item.tagline}
+        </span>
+      )}
+      {item.heading && (
+        <h2 className="font-display font-semibold uppercase tracking-wide text-3xl sm:text-4xl text-lupetti-tealDark mt-1 text-balance">
+          {item.heading}
+        </h2>
+      )}
+      <RichText value={item.text} className="mt-5" />
+      {item.cta?.label && (
+        <div className="mt-6">
+          <SmartLink
+            href={item.cta.href}
+            className="btn-pieno"
+          >
+            <span>{item.cta.label}</span>
+            <ArrowRight className="w-4 h-4" aria-hidden />
+          </SmartLink>
+        </div>
+      )}
+    </div>
+  );
 
   return (
-    <section className={`py-14 sm:py-20 ${bgClass}`}>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {isVertical ? (
+    <section className={`py-14 sm:py-20 ${sfondo}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {verticale || !haImmagine ? (
           <div className="max-w-3xl mx-auto text-center space-y-8">
-            {pos === "top" && renderImage()}
-            <div>
-              {item.tagline && (
-                <span className="text-xs font-extrabold uppercase tracking-wider text-lupetti-teal">
-                  {item.tagline}
-                </span>
-              )}
-              {item.heading && (
-                <h2 className="font-display text-3xl sm:text-4xl font-bold text-slate-800 mt-1">
-                  {item.heading}
-                </h2>
-              )}
-              {item.text && (
-                <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
-                  {item.text}
-                </p>
-              )}
-              {item.secondaryText && (
-                <p className="mt-3 text-base sm:text-lg text-slate-600 leading-relaxed">
-                  {item.secondaryText}
-                </p>
-              )}
-              {item.ctaLabel && (
-                <div className="mt-6">
-                  <Link
-                    href={item.ctaHref || "/"}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-lupetti-teal text-white text-sm font-bold hover:bg-lupetti-tealDark transition-colors"
-                  >
-                    <span>{item.ctaLabel}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              )}
-            </div>
-            {pos === "bottom" && renderImage()}
+            {posizione === "top" && immagine}
+            {testo}
+            {posizione === "bottom" && immagine}
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            {pos === "left" && (
-              <div className="lg:col-span-5">{renderImage()}</div>
-            )}
-
-            <div className="lg:col-span-7">
-              {item.tagline && (
-                <span className="text-xs font-extrabold uppercase tracking-wider text-lupetti-teal">
-                  {item.tagline}
-                </span>
-              )}
-              {item.heading && (
-                <h2 className="font-display text-3xl sm:text-4xl font-bold text-slate-800 mt-1">
-                  {item.heading}
-                </h2>
-              )}
-              {item.text && (
-                <p className="mt-5 text-base sm:text-lg text-slate-600 leading-relaxed">
-                  {item.text}
-                </p>
-              )}
-              {item.secondaryText && (
-                <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
-                  {item.secondaryText}
-                </p>
-              )}
-              {item.ctaLabel && (
-                <div className="mt-6">
-                  <Link
-                    href={item.ctaHref || "/"}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-lupetti-teal text-white text-sm font-bold hover:bg-lupetti-tealDark transition-colors"
-                  >
-                    <span>{item.ctaLabel}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              )}
+            <div
+              className={`lg:col-span-7 ${
+                posizione === "left" ? "lg:order-2" : ""
+              }`}
+            >
+              {testo}
             </div>
-
-            {pos === "right" && (
-              <div className="lg:col-span-5">{renderImage()}</div>
-            )}
+            <div className="lg:col-span-5">{immagine}</div>
           </div>
         )}
       </div>
     </section>
   );
 }
-

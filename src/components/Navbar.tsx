@@ -1,127 +1,177 @@
 "use client";
 
-import React, { useState } from "react";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, CalendarCheck } from "lucide-react";
+import { useEffect, useState } from "react";
 
-interface NavItem {
-  label: string;
-  href: string;
-}
+import type { LinkValue } from "@/types";
+
+import logo from "../../public/images/logo.webp";
+import SmartLink from "./SmartLink";
 
 interface NavbarProps {
-  items?: readonly NavItem[];
-  ctaLabel?: string;
-  ctaHref?: string;
-  whatsapp?: string;
-  telefono?: string;
+  items: LinkValue[];
+  cta?: LinkValue | null;
+  nomeAttivita: string;
 }
 
-export default function Navbar({
-  items,
-  ctaLabel = "Prenota Posto",
-  ctaHref = "/ludoteca-e-laboratori#prenotazioni",
-}: NavbarProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+/**
+ * Testata nello stile di Da Lucia: le voci del menu si dividono a metà ai lati
+ * del logo, che sta al centro della barra.
+ * Sul telefono il menu diventa un pannello che entra da sinistra.
+ * Scorrendo in giù la testata scompare per lasciare spazio alla pagina;
+ * appena si scorre in su ricompare.
+ */
+export default function Navbar({ items, cta, nomeAttivita }: NavbarProps) {
+  const [menuAperto, setMenuAperto] = useState(false);
   const pathname = usePathname();
 
-  const navLinks: readonly NavItem[] =
-    items && items.length > 0
-      ? items
-      : [
-          { label: "Home", href: "/" },
-          { label: "Chi Siamo & Spazi", href: "/chi-siamo" },
-          { label: "Ludoteca & Prenotazioni", href: "/ludoteca-e-laboratori" },
-          { label: "Orari & Contatti", href: "/contatti" },
-        ];
+  const [nascosta, setNascosta] = useState(false);
+
+  // Cambiando pagina il pannello del telefono si richiude.
+  useEffect(() => setMenuAperto(false), [pathname]);
+
+  useEffect(() => {
+    let ultima = window.scrollY;
+    const suScorrimento = () => {
+      const y = window.scrollY;
+      // I piccoli movimenti non contano; in cima alla pagina resta sempre visibile.
+      if (Math.abs(y - ultima) < 8) return;
+      setNascosta(y > ultima && y > 140);
+      ultima = y;
+    };
+    window.addEventListener("scroll", suScorrimento, { passive: true });
+    return () => window.removeEventListener("scroll", suScorrimento);
+  }, []);
+
+  const voci = items.filter((v) => v.label && v.href);
+  const haCta = Boolean(cta?.label && cta.href);
+  // Le voci si dividono a metà ai lati del logo. Il bottone sta a destra e
+  // conta come una voce, così i due lati restano bilanciati.
+  const meta = Math.ceil((voci.length + (haCta ? 1 : 0)) / 2);
+  const sinistra = voci.slice(0, meta);
+  const destra = voci.slice(meta);
+  const isAttiva = (href?: string | null) => href?.split("#")[0] === pathname;
+
+  const elenco = (gruppo: LinkValue[]) =>
+    gruppo.map((voce) => (
+      <li key={voce._key || voce.href}>
+        <SmartLink
+          href={voce.href}
+          className={`voce-menu font-display font-medium uppercase text-lg ${
+            isAttiva(voce.href) ? "attiva" : ""
+          }`}
+        >
+          {voce.label}
+        </SmartLink>
+      </li>
+    ));
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-lupetti-teal/15">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
-        {/* Full Logo in Header */}
-        <Link href="/" className="flex items-center py-2 group">
-          <img
-            src="/images/logo.webp"
-            alt="I Lupetti - Giocattoleria e Ludoteca"
-            className="h-16 sm:h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-          />
-        </Link>
+    <header
+      className={`testata sticky top-0 z-40 bg-white ${
+        nascosta && !menuAperto ? "nascosta" : ""
+      }`}
+      // Arrivando con il tasto Tab su una voce del menu la testata ricompare.
+      onFocus={() => setNascosta(false)}
+    >
+      <nav
+        className="relative max-w-7xl mx-auto px-4 xl:px-6 h-[70px] xl:h-[92px] flex items-center justify-between"
+        aria-label="Menu principale"
+      >
+        <ul className="menu-sinistra hidden xl:flex flex-1 items-center justify-start gap-6 pr-20">
+          {elenco(sinistra)}
+        </ul>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm font-bold transition-colors ${
-                  isActive
-                    ? "text-lupetti-tealDark"
-                    : "text-slate-600 hover:text-lupetti-tealDark"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Clean CTA to Booking */}
-        <div className="hidden sm:flex items-center">
-          <Link
-            href={ctaHref}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white bg-lupetti-teal hover:bg-lupetti-tealDark transition-colors shadow-sm"
-          >
-            <CalendarCheck className="w-4 h-4" />
-            <span>{ctaLabel}</span>
+        <div className="logo-centrale">
+          <Link href="/" className="block">
+            <Image
+              src={logo}
+              alt={nomeAttivita}
+              priority
+              sizes="130px"
+              className="h-[54px] xl:h-[78px] w-auto object-contain"
+            />
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
+        <ul className="menu-destra hidden xl:flex flex-1 items-center justify-end gap-6 pl-20">
+          {elenco(destra)}
+          {haCta && (
+            <li>
+              <SmartLink href={cta?.href} className="btn-pieno !py-2 !px-4">
+                {cta?.label}
+              </SmartLink>
+            </li>
+          )}
+        </ul>
+
         <button
           type="button"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Menu"
-          className="md:hidden p-2.5 rounded-2xl bg-lupetti-tealLight text-lupetti-tealDark"
+          onClick={() => setMenuAperto(true)}
+          aria-label="Apri il menu"
+          aria-expanded={menuAperto}
+          className="xl:hidden p-2 text-slate-700"
         >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          <Menu className="w-8 h-8" aria-hidden />
         </button>
-      </div>
+      </nav>
 
-      {/* Mobile Dropdown */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-lupetti-teal/15 px-4 pt-2 pb-5 shadow-lg">
-          <div className="flex flex-col gap-1">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`px-4 py-3 text-base font-bold transition-colors ${
-                    isActive
-                      ? "text-lupetti-tealDark"
-                      : "text-slate-700 hover:text-lupetti-tealDark"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-            <Link
-              href={ctaHref}
-              onClick={() => setMobileMenuOpen(false)}
-              className="mt-3 py-3 rounded-2xl font-bold text-center text-white bg-lupetti-teal flex items-center justify-center gap-2"
-            >
-              <CalendarCheck className="w-4 h-4" />
-              <span>{ctaLabel}</span>
-            </Link>
-          </div>
+      {/* Pannello del menu su telefono e tablet */}
+      <div
+        className={`xl:hidden fixed inset-0 z-50 min-h-screen bg-white/90 backdrop-blur backdrop-saturate-150 shadow-lg transform transition-transform duration-300 ease-in-out ${
+          menuAperto ? "translate-x-0" : "-translate-x-full"
+        }`}
+        aria-hidden={!menuAperto}
+      >
+        <div className="flex items-center justify-between h-[70px] px-4 bg-white border-b-2 border-lupetti-teal">
+          <Link href="/" onClick={() => setMenuAperto(false)} tabIndex={menuAperto ? 0 : -1}>
+            <Image
+              src={logo}
+              alt={nomeAttivita}
+              sizes="90px"
+              className="h-[54px] w-auto object-contain"
+            />
+          </Link>
+          <button
+            type="button"
+            onClick={() => setMenuAperto(false)}
+            aria-label="Chiudi il menu"
+            tabIndex={menuAperto ? 0 : -1}
+            className="p-2 text-slate-700"
+          >
+            <X className="w-8 h-8" aria-hidden />
+          </button>
         </div>
-      )}
+        <ul className="flex flex-col gap-2 p-6">
+          {voci.map((voce) => (
+            <li key={voce._key || voce.href}>
+              <SmartLink
+                href={voce.href}
+                onClick={() => setMenuAperto(false)}
+                className={`block py-2 font-display font-medium uppercase text-2xl ${
+                  isAttiva(voce.href) ? "text-lupetti-tealDark" : "text-slate-700"
+                }`}
+              >
+                {voce.label}
+              </SmartLink>
+            </li>
+          ))}
+          {haCta && (
+            <li className="pt-4">
+              <SmartLink
+                href={cta?.href}
+                onClick={() => setMenuAperto(false)}
+                className="btn-pieno w-full"
+              >
+                {cta?.label}
+              </SmartLink>
+            </li>
+          )}
+        </ul>
+      </div>
     </header>
   );
 }

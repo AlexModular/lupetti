@@ -1,13 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    unoptimized: true,
-  },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.externals = [...(config.externals || []), "node:sqlite"];
-    }
-    return config;
+    // Le immagini dei contenuti arrivano dalla CDN di Sanity, già ottimizzate.
+    remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
 };
 

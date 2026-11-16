@@ -2,7 +2,6 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
@@ -23,8 +22,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["Nunito", "system-ui", "-apple-system", "sans-serif"],
-        display: ["Fredoka", "Nunito", "system-ui", "sans-serif"],
+        sans: ["var(--font-nunito)", "system-ui", "-apple-system", "sans-serif"],
+        display: ["var(--font-fredoka)", "var(--font-nunito)", "system-ui", "sans-serif"],
       },
       boxShadow: {
         soft: "0 12px 32px -8px rgba(78, 168, 152, 0.14)",

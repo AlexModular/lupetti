@@ -1,152 +1,56 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getSiteData } from "@/lib/content";
+import { after, NextResponse, type NextRequest } from "next/server";
+
+import { inviaEmailPrenotazione } from "@/lib/email";
+import { ipDi, troppeRichieste } from "@/lib/freno";
 import {
-  getBookedSpotsByEvent,
-  listAllBookings,
-  createBooking,
-  cancelBookingById,
-  CapacityError,
-} from "@/lib/db";
+  creaPrenotazione,
+  ErrorePrenotazione,
+  leggiRichiesta,
+} from "@/lib/prenotazioni";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(req: NextRequest) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const includeList = searchParams.get("admin") === "1";
-    const eventSlug = searchParams.get("event") || undefined;
-
-    const [{ eventi }, bookedMap] = await Promise.all([
-      getSiteData(),
-      getBookedSpotsByEvent(),
-    ]);
-
-    const availability = eventi.map((ev) => {
-      const maxCapacity = ev.maxCapacity ?? 10;
-      const bookedSpots = bookedMap[ev.slug] ?? 0;
-      const remainingSpots = Math.max(0, maxCapacity - bookedSpots);
-      return {
-        slug: ev.slug,
-        title: ev.title,
-        date: ev.date,
-        category: ev.category,
-        ageRange: ev.ageRange,
-        price: ev.price ?? "12€",
-        bookable: ev.bookable ?? true,
-        maxCapacity,
-        bookedSpots,
-        remainingSpots,
-        isSoldOut: remainingSpots === 0,
-      };
-    });
-
-    if (includeList) {
-      const bookings = await listAllBookings(eventSlug);
-      return NextResponse.json({ availability, bookings });
-    }
-
-    return NextResponse.json({ availability });
-  } catch (error) {
-    console.error("GET /api/prenotazioni error:", error);
-    return NextResponse.json(
-      { error: "Errore nel caricamento delle disponibilità." },
-      { status: 500 }
-    );
-  }
-}
-
+/**
+ * Crea una prenotazione (laboratorio/evento oppure ludoteca a ore).
+ * Risponde solo con il riepilogo per chi ha prenotato: nessun dato di altri.
+ */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const {
-      event_slug,
-      parent_name,
-      parent_email,
-      parent_phone,
-      child_name,
-      child_age,
-      spots,
-      notes,
-    } = body;
+    const body = await req.json().catch(() => null);
 
-    if (
-      !event_slug ||
-      !parent_name?.trim() ||
-      !parent_email?.trim() ||
-      !parent_phone?.trim() ||
-      !child_name?.trim()
-    ) {
-      return NextResponse.json(
-        { error: "Compila tutti i campi obbligatori per completare la prenotazione." },
-        { status: 400 }
-      );
+    // Campo trappola: i genitori non lo vedono, i bot lo compilano.
+    if (body && typeof body === "object" && body.sito) {
+      return NextResponse.json({ error: "Richiesta non valida." }, { status: 400 });
     }
 
-    const { eventi } = await getSiteData();
-    const targetEvent = eventi.find((e) => e.slug === event_slug);
-
-    if (!targetEvent) {
-      return NextResponse.json(
-        { error: "L'attività selezionata non è stata trovata." },
-        { status: 404 }
-      );
-    }
-
-    if (targetEvent.bookable === false) {
-      return NextResponse.json(
-        { error: "Questa attività non richiede o non accetta prenotazioni online." },
-        { status: 400 }
-      );
-    }
-
-    const booking = await createBooking({
-      event_slug: targetEvent.slug,
-      event_title: targetEvent.title,
-      event_date: targetEvent.date,
-      max_capacity: targetEvent.maxCapacity ?? 10,
-      parent_name: parent_name.trim(),
-      parent_email: parent_email.trim(),
-      parent_phone: parent_phone.trim(),
-      child_name: child_name.trim(),
-      child_age: (child_age || "").trim() || "N/D",
-      spots: Number(spots) || 1,
-      notes: (notes || "").trim(),
-    });
-
-    return NextResponse.json({ booking }, { status: 201 });
-  } catch (error) {
-    if (error instanceof CapacityError) {
+    // Al massimo 8 prenotazioni ogni 10 minuti per indirizzo.
+    if (troppeRichieste("prenota", ipDi(req.headers), 8)) {
       return NextResponse.json(
         {
-          error: error.message,
-          remainingSpots: error.remainingSpots,
+          error:
+            "Hai fatto molte prenotazioni in poco tempo. Riprova tra qualche minuto o contattaci direttamente.",
         },
-        { status: 409 }
+        { status: 429 }
       );
     }
-    console.error("POST /api/prenotazioni error:", error);
-    return NextResponse.json(
-      { error: "Errore interno durante il salvataggio della prenotazione." },
-      { status: 500 }
-    );
-  }
-}
 
-export async function DELETE(req: NextRequest) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const id = Number(searchParams.get("id"));
-    if (!id) {
-      return NextResponse.json({ error: "ID prenotazione mancante." }, { status: 400 });
-    }
-    await cancelBookingById(id);
-    return NextResponse.json({ ok: true });
+    const salvata = await creaPrenotazione(leggiRichiesta(body));
+
+    // Le email partono dopo la risposta, così il genitore non aspetta.
+    after(() => inviaEmailPrenotazione(salvata));
+
+    return NextResponse.json({ prenotazione: salvata.esito }, { status: 201 });
   } catch (error) {
-    console.error("DELETE /api/prenotazioni error:", error);
+    if (error instanceof ErrorePrenotazione) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+    console.error("POST /api/prenotazioni:", error);
     return NextResponse.json(
-      { error: "Impossibile annullare la prenotazione." },
+      {
+        error:
+          "Non siamo riusciti a salvare la prenotazione. Riprova tra poco o contattaci.",
+      },
       { status: 500 }
     );
   }
 }
-

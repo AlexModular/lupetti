@@ -1,126 +1,175 @@
-import React from "react";
+import { ChevronsUp, Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { Instagram, Facebook, Settings, ClipboardList } from "lucide-react";
+
+import { riepilogoOrari } from "@/lib/orari";
+import { indirizzoCompleto, telefonoHref } from "@/lib/sito";
+import type { Impostazioni, LinkValue } from "@/types";
+
+import logo from "../../public/images/logo.webp";
+import ApertoOra from "./ApertoOra";
+import SmartLink from "./SmartLink";
 
 interface FooterProps {
-  nomeAttivita: string;
-  indirizzo: string;
-  telefono: string;
-  email: string;
-  orariMattina: string;
-  orariPomeriggio: string;
-  instagramUrl: string;
-  facebookUrl: string;
+  impostazioni: Impostazioni | null;
+  voci: LinkValue[];
 }
 
-export default function Footer({
-  nomeAttivita,
-  indirizzo,
-  telefono,
-  email,
-  orariMattina,
-  orariPomeriggio,
-  instagramUrl,
-  facebookUrl,
-}: FooterProps) {
+/**
+ * Piè di pagina nello stile di Da Lucia: bordo spesso in alto, logo grande a
+ * sinistra, "Dove siamo", orari e social, tasto "torna su" e riga finale.
+ */
+export default function Footer({ impostazioni, voci }: FooterProps) {
+  const nome = impostazioni?.nomeAttivita || "I Lupetti";
+  const indirizzo = indirizzoCompleto(impostazioni);
+  const orari = riepilogoOrari(impostazioni?.orari);
+  const haOrari = orari.some((r) => r.orari.length > 0);
+  const haSocial = Boolean(impostazioni?.instagramUrl || impostazioni?.facebookUrl);
+  const icona = "w-4 h-4 inline-block mr-2 -mt-0.5 text-lupetti-teal";
+
   return (
-    <footer className="bg-lupetti-tealLight/35 border-t border-lupetti-teal/15 text-slate-600 mt-auto">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-lupetti-teal/15 items-start">
-          {/* Logo & Info */}
-          <div className="md:col-span-5">
-            <Link href="/" className="inline-block">
-              <img
-                src="/images/logo.webp"
-                alt="I Lupetti Logo"
-                className="h-20 w-auto object-contain"
-              />
-            </Link>
-            <p className="mt-3 text-sm text-slate-600 max-w-xs leading-relaxed">
-              Giocattoleria educativa e ludoteca con laboratori creativi a numero chiuso e spazio gioco assistito.
+    <footer className="piede mt-auto bg-white pt-6 pb-6 text-slate-700">
+      <div className="max-w-7xl mx-auto px-5 py-7 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-x-8 gap-y-10 text-center md:text-left">
+        <div className="md:col-span-2 lg:col-span-4 flex flex-col items-center">
+          <Link href="/">
+            <Image
+              src={logo}
+              alt={nome}
+              sizes="340px"
+              className="w-full max-w-[340px] h-auto"
+            />
+          </Link>
+          {impostazioni?.descrizioneBreve && (
+            <p className="mt-4 text-sm text-center max-w-sm leading-relaxed">
+              {impostazioni.descrizioneBreve}
             </p>
-          </div>
+          )}
+        </div>
 
-          {/* Pages */}
-          <div className="md:col-span-3">
-            <h4 className="font-display font-bold text-slate-800 text-base mb-3">
-              Navigazione
-            </h4>
-            <ul className="space-y-2 text-sm font-semibold">
+        <div className="lg:col-span-3">
+          <h2>Dove siamo</h2>
+          <ul className="space-y-2">
+            {indirizzo && (
               <li>
-                <Link href="/" className="hover:text-lupetti-tealDark transition-colors">
-                  Home
-                </Link>
+                <MapPin className={icona} aria-hidden />
+                {indirizzo}
               </li>
+            )}
+            {impostazioni?.telefono && (
               <li>
-                <Link href="/chi-siamo" className="hover:text-lupetti-tealDark transition-colors">
-                  Chi Siamo &amp; Spazi
-                </Link>
+                <Phone className={icona} aria-hidden />
+                <a
+                  href={telefonoHref(impostazioni.telefono)}
+                  className="hover:text-lupetti-tealDark"
+                >
+                  {impostazioni.telefono}
+                </a>
               </li>
+            )}
+            {impostazioni?.email && (
               <li>
-                <Link href="/ludoteca-e-laboratori" className="hover:text-lupetti-tealDark transition-colors">
-                  Ludoteca &amp; Prenotazioni
-                </Link>
+                <Mail className={icona} aria-hidden />
+                <a
+                  href={`mailto:${impostazioni.email}`}
+                  className="hover:text-lupetti-tealDark break-all"
+                >
+                  {impostazioni.email}
+                </a>
               </li>
-              <li>
-                <Link href="/contatti" className="hover:text-lupetti-tealDark transition-colors">
-                  Orari &amp; Contatti
-                </Link>
-              </li>
-            </ul>
-          </div>
+            )}
+          </ul>
+        </div>
 
-          {/* Orari & Contatti */}
-          <div className="md:col-span-4 text-sm space-y-1.5">
-            <h4 className="font-display font-bold text-slate-800 text-base mb-3">
-              Recapiti &amp; Orari
-            </h4>
-            <p className="font-semibold text-slate-700">{indirizzo}</p>
-            <p>Tel: {telefono} • {email}</p>
-            <p className="text-xs text-slate-500 pt-1">
-              {orariMattina} | {orariPomeriggio}
-            </p>
-            <div className="flex flex-wrap items-center gap-2 pt-3">
-              <a
-                href={instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                className="p-2 rounded-full bg-white text-lupetti-tealDark hover:bg-lupetti-teal hover:text-white transition-colors shadow-sm"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href={facebookUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-                className="p-2 rounded-full bg-white text-lupetti-skyDark hover:bg-lupetti-sky hover:text-white transition-colors shadow-sm"
-              >
-                <Facebook className="w-4 h-4" />
-              </a>
-              <Link
-                href="/admin/prenotazioni"
-                className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-lupetti-tealDark hover:bg-lupetti-teal hover:text-white text-xs font-bold border border-lupetti-teal/25 transition-colors"
-              >
-                <ClipboardList className="w-3.5 h-3.5" />
-                <span>Registro Prenotazioni</span>
-              </Link>
-              <Link
-                href="/keystatic"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-slate-500 hover:text-lupetti-tealDark text-xs font-bold border border-slate-200 transition-colors"
-              >
-                <Settings className="w-3.5 h-3.5" />
-                <span>CMS</span>
-              </Link>
+        {haOrari && (
+          <div className="lg:col-span-3">
+            <h2>Orari</h2>
+            <dl className="space-y-1.5 inline-block text-left">
+              {orari.map((riga) => (
+                <div key={riga.giorni} className="flex gap-3">
+                  <dt className="font-display font-semibold uppercase w-24 shrink-0">
+                    {riga.giorni}
+                  </dt>
+                  <dd>
+                    {riga.orari.length
+                      ? riga.orari.map((o) => <div key={o}>{o}</div>)
+                      : "Chiuso"}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            {impostazioni?.notaOrari && (
+              <p className="mt-2 text-sm italic">{impostazioni.notaOrari}</p>
+            )}
+            <div className="mt-3">
+              <ApertoOra orari={impostazioni?.orari} />
             </div>
           </div>
-        </div>
+        )}
 
-        <div className="pt-6 text-center sm:text-left text-xs text-slate-500 flex flex-col sm:flex-row justify-between gap-2">
-          <p>© {new Date().getFullYear()} {nomeAttivita}.</p>
-          <p>Giocattoleria ★ Ludoteca</p>
+        <div className="lg:col-span-2">
+          <h2>{haSocial ? "Seguici" : "Il sito"}</h2>
+          {haSocial && (
+            <div className="flex justify-center md:justify-start gap-4 mb-5">
+              {impostazioni?.instagramUrl && (
+                <a
+                  href={impostazioni.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="hover:text-lupetti-tealDark transition-colors"
+                >
+                  <Instagram className="w-7 h-7" aria-hidden />
+                </a>
+              )}
+              {impostazioni?.facebookUrl && (
+                <a
+                  href={impostazioni.facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                  className="hover:text-lupetti-tealDark transition-colors"
+                >
+                  <Facebook className="w-7 h-7" aria-hidden />
+                </a>
+              )}
+            </div>
+          )}
+          <ul className="space-y-1.5 text-sm">
+            {voci
+              .filter((v) => v.label && v.href)
+              .map((voce) => (
+                <li key={voce._key || voce.href}>
+                  <SmartLink href={voce.href} className="hover:text-lupetti-tealDark">
+                    {voce.label}
+                  </SmartLink>
+                </li>
+              ))}
+            {impostazioni?.privacyHref && (
+              <li>
+                <Link
+                  href={impostazioni.privacyHref}
+                  className="hover:text-lupetti-tealDark"
+                >
+                  Privacy
+                </Link>
+              </li>
+            )}
+          </ul>
         </div>
+      </div>
+
+      <div className="barra-finale text-center text-sm px-4">
+        <a href="#contenuto" className="torna-su" aria-label="Torna su">
+          <ChevronsUp className="w-7 h-7" aria-hidden />
+        </a>
+        <p>
+          © {new Date().getFullYear()} {nome}
+        </p>
+        <p className="mt-1 text-xs text-slate-500">
+          <Link href="/studio" className="hover:text-lupetti-tealDark">
+            Area riservata
+          </Link>
+        </p>
       </div>
     </footer>
   );

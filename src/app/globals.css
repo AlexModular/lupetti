@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Impostazione grafica ripresa dal sito di Da Lucia (testata con logo nel
+ * cerchio, fascia titolo scura, titoli centrati in maiuscolo, bottoni
+ * rettangolari, piè di pagina con bordo spesso), con colori e caratteri de
+ * I Lupetti. Il colore d'accento qui fa la parte dell'oro di Da Lucia.
+ */
+:root {
+  --accento: #4ea898;
+  --accento-scuro: #388577;
+  --inchiostro: #334155;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -10,18 +22,244 @@
   body {
     @apply bg-white text-slate-800 antialiased selection:bg-lupetti-teal/20 selection:text-lupetti-tealDark;
   }
-}
 
-@keyframes floatSlow {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
+  p {
+    font-size: 1.0625rem;
   }
 }
 
-.animate-float-slow {
-  animation: floatSlow 5s ease-in-out infinite;
+@layer components {
+  /* Bottoni rettangolari: al passaggio i colori si invertono. */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border-2 font-display font-semibold uppercase tracking-wide text-sm sm:text-base text-center transition-colors duration-200;
+  }
+
+  .btn-pieno {
+    @apply btn border-lupetti-tealDark bg-lupetti-tealDark text-white hover:bg-white hover:text-lupetti-tealDark;
+  }
+
+  .btn-bordo {
+    @apply btn border-lupetti-tealDark bg-white text-lupetti-tealDark hover:bg-lupetti-tealDark hover:text-white;
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    @apply cursor-not-allowed border-slate-200 bg-slate-100 text-slate-500 hover:bg-slate-100 hover:text-slate-500;
+  }
+
+  /* Titolo di sezione: centrato, maiuscolo, con un trattino colorato sotto. */
+  .titolo-sezione {
+    @apply font-display font-semibold uppercase tracking-wide text-lupetti-tealDark text-3xl sm:text-4xl lg:text-5xl text-balance;
+  }
+
+  .titolo-sezione::after {
+    content: "";
+    display: block;
+    width: 72px;
+    height: 4px;
+    margin: 0.9rem auto 0;
+    background: var(--accento);
+  }
+
+  .occhiello {
+    @apply block font-display font-medium text-base sm:text-lg text-lupetti-skyDark;
+  }
 }
 
+/* --------------------------------- Testata -------------------------------- */
+
+.testata {
+  border-bottom: 2px solid var(--accento);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.08);
+}
+
+/* Voci di menu: la sottolineatura cresce al passaggio e sulla pagina attiva. */
+.testata .voce-menu {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  color: var(--inchiostro);
+  background-image: linear-gradient(var(--accento), var(--accento));
+  background-size: 0% 0.2em;
+  background-position: 0% 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.testata .menu-destra .voce-menu {
+  background-position: 100% 100%;
+}
+
+.testata .voce-menu:hover,
+.testata .voce-menu.attiva {
+  color: var(--accento-scuro);
+  background-size: 50% 0.2em;
+}
+
+/* Su schermi grandi il logo sta al centro della barra, tra le due metà del menu. */
+@media screen and (min-width: 1280px) {
+  .testata .logo-centrale {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* La testata scompare scorrendo in giù e ricompare scorrendo in su. */
+.testata {
+  transition: transform 0.3s ease;
+}
+
+.testata.nascosta {
+  transform: translateY(-105%);
+}
+
+/* ------------------------------ Fascia titolo ----------------------------- */
+
+.fascia-titolo {
+  position: relative;
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(120deg, #2b6b60, var(--accento-scuro) 45%, #398bbf);
+}
+
+.fascia-titolo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0.38);
+  z-index: 1;
+}
+
+.fascia-titolo h1 {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 4px rgb(0 0 0 / 0.7);
+}
+
+.briciole {
+  background: var(--inchiostro);
+  border-bottom: 2px solid var(--accento);
+}
+
+.briciole li:not(:last-child)::after {
+  content: "/";
+  padding: 0 14px;
+  color: #94a3b8;
+}
+
+@media screen and (min-width: 768px) {
+  .fascia-titolo {
+    height: 300px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .fascia-titolo {
+    height: 360px;
+  }
+}
+
+/* ------------------------------ Piè di pagina ----------------------------- */
+
+.piede {
+  border-top: 10px solid var(--accento);
+}
+
+.piede h2 {
+  @apply font-display font-semibold uppercase tracking-wide text-xl sm:text-2xl text-lupetti-tealDark mb-4;
+}
+
+.piede .barra-finale {
+  position: relative;
+  margin-top: 25px;
+  padding-top: 40px;
+  border-top: 2px solid var(--inchiostro);
+}
+
+/* Tasto "torna su": mezzo cerchio appoggiato alla riga finale. */
+.piede .torna-su {
+  position: absolute;
+  top: -32px;
+  left: calc(50% - 32px);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fff;
+  border-top: 4px solid var(--inchiostro);
+  color: var(--inchiostro);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.piede .torna-su:hover {
+  color: var(--accento-scuro);
+  border-color: var(--accento);
+}
+
+/* ----------------------- Comparsa allo scorrimento ------------------------ */
+
+/*
+ * Gli elementi con data-reveal compaiono quando entrano nello schermo.
+ * La classe "con-comparsa" viene messa da ScrollReveal solo quando il
+ * JavaScript è attivo: senza, tutto resta semplicemente visibile.
+ */
+.con-comparsa [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.con-comparsa [data-reveal="zoom"] {
+  transform: scale(0.92);
+}
+
+/* La transizione sta solo qui: così gli elementi si nascondono all'istante
+   (senza dissolvenza al caricamento) e compaiono con calma. */
+.con-comparsa [data-reveal].visibile {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* Chi ha chiesto al sistema di ridurre le animazioni non le vede. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .con-comparsa [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* -------------------------------- Slideshow ------------------------------- */
+
+.slideshow {
+  --swiper-theme-color: #fff;
+  --swiper-navigation-color: #fff;
+  --swiper-navigation-size: 34px;
+  --swiper-pagination-bullet-inactive-color: #fff;
+  --swiper-pagination-bullet-inactive-opacity: 0.6;
+  --swiper-pagination-color: var(--accento);
+  --swiper-pagination-bullet-size: 10px;
+}
+
+.slideshow .swiper-button-prev,
+.slideshow .swiper-button-next {
+  filter: drop-shadow(0 0 6px rgb(0 0 0 / 0.6));
+}
