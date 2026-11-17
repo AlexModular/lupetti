@@ -17,13 +17,6 @@ export interface LinkValue {
   href?: string | null;
 }
 
-export interface InfoUtile {
-  _key: string;
-  icona?: string | null;
-  titolo?: string | null;
-  testo?: string | null;
-}
-
 export interface Impostazioni {
   nomeAttivita?: string | null;
   descrizioneBreve?: string | null;
@@ -39,7 +32,6 @@ export interface Impostazioni {
   facebookUrl?: string | null;
   orari?: OrariSettimanali | null;
   notaOrari?: string | null;
-  infoUtili?: InfoUtile[] | null;
   metaTitle?: string | null;
   metaDescription?: string | null;
   ogImage?: SanityImageValue | null;

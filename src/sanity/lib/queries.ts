@@ -82,7 +82,7 @@ export const SITE_QUERY = defineQuery(`{
   "impostazioni": *[_id == "impostazioni"][0]{
     nomeAttivita, descrizioneBreve, telefono, whatsapp, email,
     via, cap, citta, provincia, indicazioni, instagramUrl, facebookUrl,
-    orari, notaOrari, infoUtili[]{ _key, icona, titolo, testo },
+    orari, notaOrari,
     metaTitle, metaDescription, ogImage,
     "privacyHref": "/" + paginaPrivacy->slug.current
   },

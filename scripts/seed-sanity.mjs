@@ -122,31 +122,6 @@ async function main() {
         sabato: orarioFeriale(),
         domenica: [],
       },
-      infoUtili: [
-        {
-          _type: "infoUtile",
-          _key: k(),
-          icona: "Baby",
-          titolo: "Servizi per i più piccoli",
-          testo:
-            "Struttura attrezzata con fasciatoio, baby parking e attività per diverse fasce d'età.",
-        },
-        {
-          _type: "infoUtile",
-          _key: k(),
-          icona: "Car",
-          titolo: "Parcheggio gratuito",
-          testo:
-            "Nei dintorni di Via Savigno 1/a è disponibile il parcheggio gratuito in strada.",
-        },
-        {
-          _type: "infoUtile",
-          _key: k(),
-          icona: "CreditCard",
-          titolo: "Metodi di pagamento",
-          testo: "Si accettano carte di credito, carte di debito e bancomat.",
-        },
-      ],
       metaTitle: "I Lupetti • Giocattoleria & Ludoteca a Bologna (Via Savigno 1/a)",
       metaDescription:
         "I Lupetti è un negozio di giocattoli e ludoteca in Via Savigno 1/a a Bologna. Vendita giochi, baby parking e laboratori organizzati per diverse fasce d'età.",

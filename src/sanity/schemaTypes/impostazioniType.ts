@@ -1,15 +1,5 @@
 import { CogIcon } from "@sanity/icons";
-import { defineArrayMember, defineField, defineType } from "sanity";
-
-/** Icone disponibili per le schede "Informazioni utili". */
-export const ICONE_INFO = [
-  { title: "Bimbo / prima infanzia", value: "Baby" },
-  { title: "Parcheggio", value: "Car" },
-  { title: "Pagamenti", value: "CreditCard" },
-  { title: "Accessibilità", value: "Accessibility" },
-  { title: "Cuore", value: "Heart" },
-  { title: "Informazione", value: "Info" },
-];
+import { defineField, defineType } from "sanity";
 
 /** Impostazioni generali del sito (documento unico). */
 export const impostazioniType = defineType({
@@ -39,40 +29,6 @@ export const impostazioniType = defineType({
       rows: 3,
       group: "attivita",
     }),
-    defineField({
-      name: "infoUtili",
-      title: "Informazioni utili",
-      description:
-        "Schede brevi mostrate nella pagina contatti (parcheggio, fasciatoio, pagamenti…).",
-      type: "array",
-      group: "attivita",
-      of: [
-        defineArrayMember({
-          name: "infoUtile",
-          title: "Informazione",
-          type: "object",
-          fields: [
-            defineField({
-              name: "icona",
-              title: "Icona",
-              type: "string",
-              options: { list: ICONE_INFO },
-              initialValue: "Info",
-            }),
-            defineField({
-              name: "titolo",
-              title: "Titolo",
-              type: "string",
-              validation: (rule) => rule.required(),
-            }),
-            defineField({ name: "testo", title: "Testo", type: "text", rows: 2 }),
-          ],
-          preview: { select: { title: "titolo", subtitle: "testo" } },
-        }),
-      ],
-      validation: (rule) => rule.max(6),
-    }),
-
     defineField({
       name: "telefono",
       title: "Telefono",
