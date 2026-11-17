@@ -82,10 +82,10 @@ async function main() {
   console.log(`Dataset: ${projectId} / ${dataset}`);
 
   console.log("Carico le immagini…");
-  const [logoIntero, salaLudoteca, angoloMorbido, laboratorio, giochiFamiglia, scaffale] =
+  const [mascotte, salaLudoteca, angoloMorbido, laboratorio, giochiFamiglia, scaffale] =
     await Promise.all(
       [
-        "logo.png",
+        "lupetti-mascot.png",
         "gallery/sala-ludoteca.svg",
         "gallery/angolo-morbido.svg",
         "gallery/laboratorio-pittura.svg",
@@ -237,7 +237,7 @@ async function main() {
             "I Lupetti è un negozio di giocattoli e ludoteca situato in Via Savigno, 1/a a Bologna (40141). La struttura nasce come uno spazio accogliente dedicato alle famiglie, offrendo sia la vendita di giochi selezionati sia servizi di ludoteca con baby parking e laboratori organizzati per diverse fasce d'età.",
             "La struttura è interamente attrezzata per accogliere anche i bambini più piccoli ed è dotata di fasciatoio e attività a loro dedicate. Nei dintorni è inoltre disponibile il comodo parcheggio gratuito in strada."
           ),
-          image: logoIntero,
+          image: mascotte,
           imagePosition: "right",
           backgroundStyle: "teal",
           cta: link("Scopri i Laboratori e Prenota", "ludoteca-e-laboratori"),
