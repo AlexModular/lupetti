@@ -6,15 +6,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import type { OrariSettimanali } from "@/lib/orari";
 import type { LinkValue } from "@/types";
 
 import logo from "../../public/images/logo.webp";
+import ApertoOra from "./ApertoOra";
 import SmartLink from "./SmartLink";
 
 interface NavbarProps {
   items: LinkValue[];
   cta?: LinkValue | null;
   nomeAttivita: string;
+  /** Orari di apertura, per il pallino "Aperto / Chiuso" a destra. */
+  orari?: OrariSettimanali | null;
 }
 
 /**
@@ -24,7 +28,7 @@ interface NavbarProps {
  * Scorrendo in giù la testata scompare per lasciare spazio alla pagina;
  * appena si scorre in su ricompare.
  */
-export default function Navbar({ items, cta, nomeAttivita }: NavbarProps) {
+export default function Navbar({ items, cta, nomeAttivita, orari }: NavbarProps) {
   const [menuAperto, setMenuAperto] = useState(false);
   const pathname = usePathname();
 
@@ -78,7 +82,7 @@ export default function Navbar({ items, cta, nomeAttivita }: NavbarProps) {
       onFocus={() => setNascosta(false)}
     >
       <nav
-        className="relative max-w-7xl mx-auto px-4 xl:px-6 h-[70px] xl:h-[92px] flex items-center justify-between"
+        className="relative max-w-screen-2xl mx-auto px-4 xl:px-6 h-[70px] xl:h-[92px] flex items-center justify-between"
         aria-label="Menu principale"
       >
         <ul className="menu-sinistra hidden xl:flex flex-1 items-center justify-start gap-6 pr-20">
@@ -106,7 +110,19 @@ export default function Navbar({ items, cta, nomeAttivita }: NavbarProps) {
               </SmartLink>
             </li>
           )}
+          {orari && (
+            <li>
+              <ApertoOra orari={orari} testata />
+            </li>
+          )}
         </ul>
+
+        {/* Su telefono e tablet il pallino sta accanto al tasto del menu. */}
+        {orari && (
+          <div className="xl:hidden ml-auto mr-2">
+            <ApertoOra orari={orari} testata />
+          </div>
+        )}
 
         <button
           type="button"

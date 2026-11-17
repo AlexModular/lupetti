@@ -92,6 +92,7 @@ export default async function SiteLayout({
           items={voci}
           cta={navigation?.cta}
           nomeAttivita={impostazioni?.nomeAttivita || TITOLO}
+          orari={impostazioni?.orari}
         />
         <main id="contenuto" className="flex-1">
           {children}

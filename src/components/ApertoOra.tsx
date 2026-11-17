@@ -12,9 +12,15 @@ import { statoApertura, type OrariSettimanali } from "@/lib/orari";
 export default function ApertoOra({
   orari,
   className = "",
+  testata = false,
 }: {
   orari?: OrariSettimanali | null;
   className?: string;
+  /**
+   * Nella testata lo spazio è poco: dove non ci sta la frase intera (telefoni
+   * stretti e schermi medi) resta solo "Aperto" / "Chiuso".
+   */
+  testata?: boolean;
 }) {
   const [stato, setStato] = useState<ReturnType<typeof statoApertura> | null>(
     null
@@ -29,8 +35,15 @@ export default function ApertoOra({
 
   if (!stato) return null;
 
+  const frase = stato.aperto
+    ? `Aperto ora · fino alle ${stato.finoAlle}`
+    : stato.riapreAlle
+      ? `Chiuso · riapre alle ${stato.riapreAlle}`
+      : "Chiuso in questo momento";
+
   return (
     <span
+      title={testata ? frase : undefined}
       className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-extrabold ${
         stato.aperto
           ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
@@ -43,11 +56,17 @@ export default function ApertoOra({
           stato.aperto ? "bg-emerald-500" : "bg-slate-400"
         }`}
       />
-      {stato.aperto
-        ? `Aperto ora · fino alle ${stato.finoAlle}`
-        : stato.riapreAlle
-          ? `Chiuso · riapre alle ${stato.riapreAlle}`
-          : "Chiuso in questo momento"}
+      {testata ? (
+        <>
+          <span className="hidden sm:inline xl:hidden 2xl:inline">{frase}</span>
+          <span className="sm:hidden xl:inline 2xl:hidden" aria-hidden>
+            {stato.aperto ? "Aperto" : "Chiuso"}
+          </span>
+          <span className="sr-only sm:hidden xl:block 2xl:hidden">{frase}</span>
+        </>
+      ) : (
+        frase
+      )}
     </span>
   );
 }
